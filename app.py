@@ -30,16 +30,6 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                 try:
                     client = genai.Client(api_key=api_key)
                     
-                    # Kullanılabilir ilk Flash modelini otomatik seç
-                    target_model = "gemini-2.5-flash"
-                    try:
-                        for m in client.models.list():
-                            if "flash" in m.name.lower() and "generateContent" in getattr(m, 'supported_actions', ['generateContent']):
-                                target_model = m.name
-                                break
-                    except Exception:
-                        target_model = "gemini-2.5-flash"
-
                     prompt = f"""
                     Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
                     Aşağıdaki fabrika problemini detaylıca analiz et:
@@ -53,7 +43,7 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                     """
                     
                     response = client.models.generate_content(
-                        model=target_model,
+                        model="gemini-3.6-flash",
                         contents=prompt
                     )
                     
