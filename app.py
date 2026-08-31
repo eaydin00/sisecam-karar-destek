@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title("🎯 Şişecam Yapay Zeka Destekli Analiz & Karar Destek Sistemi")
-st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntemleri puanlayan ve aksiyon planını belirleyen karar destek sistemi.")
+st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntemleri puanlayan ve somut aksiyonları belirleyen karar destek sistemi.")
 
 problem_input = st.text_area(
     "📝 Proje / Problem Tanımını Girin:",
@@ -35,16 +35,19 @@ if st.button("🚀 Problemi Analiz Et ve Yöntemleri Puanla", type="primary"):
                 
                 Problem: "{problem_input}"
                 
-                Lütfen şu başlıklar altında kapsamlı ve profesyonel bir rapor üret:
+                Lütfen yanıtını tam olarak şu 3 ana başlık altında ve net bir dille oluştur:
                 
-                1. 🔍 **Kök Neden & Problem Özeti:** Problemin operasyonel/teknik özeti.
+                1. 🔍 **Kök Neden & Durum Değerlendirmesi:**
+                   Problemin temel kaynaklarını (makine, süreç, insan, yerleşim vb.) net ve teknik bir dille özetle.
                 
-                2. 📊 **Analitik Yöntem Uygunluk & Puanlama Tablosu (Markdown Tablosu formatında ver):**
-                   Bu probleme uygulanabilecek en ilgili 4-5 endüstri mühendisliği yöntemini listele.
-                   Tablo kolonları tam olarak şunlar olsun:
-                   | Öncelik | Önerilen Analiz Yöntemi | Uygunluk Puanı (100 Üzerinden) | Seçim Gerekçesi & Katkısı |
+                2. 📊 **Analitik Yöntem Uygunluk ve Puanlama Tablosu:**
+                   Bu problem için uygulanabilecek tüm alternatif mühendislik yöntemlerini değerlendir ve Markdown tablosu olarak sun.
+                   Tablo kolonları:
+                   | Öncelik | Önerilen Analiz Yöntemi | Uygunluk Puanı (100 Üzerinden) | Neden Bu Yöntem? (Beklenen Katkı) |
                    
-                3. 🛠️ **Adım Adım Saha Aksiyon Planı:** En yüksek puan alan ilk 2-3 yöntemin sahada nasıl devreye alınacağına dair kronolojik adımlar.
+                3. 🛠️ **Yöntem Bazlı Somut Saha Aksiyonları:**
+                   (NOT: Günlük/haftalık fazlara, yapay takvimlere BÖLME. Doğrudan yöntem bazında sahada ne yapılacağını açıkla.)
+                   Tabloda yüksek puan alan (uygun bulunan) yöntemlerin her biri için sahada atılacak somut, teknik adımları alt başlıklar halinde madde madde yaz.
                 """
                 
                 response_text = None
