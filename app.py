@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title("🎯 Şişecam Yapay Zeka Destekli Analiz & Karar Destek Sistemi")
-st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntem ve aksiyon planını belirleyen hibrit karar destek sistemi.")
+st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntem ve aksiyon planını belirleyen karar destek sistemi.")
 
 problem_input = st.text_area(
     "📝 Proje / Problem Tanımını Girin:",
@@ -21,17 +21,17 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
     if not problem_input.strip():
         st.warning("Lütfen analiz edilecek bir problem tanımı girin.")
     else:
-        # Secrets kontrolü
         if "GEMINI_API_KEY" not in st.secrets:
-            st.error("Secrets içinde 'GEMINI_API_KEY' bulunamadı! Lütfen Streamlit Secrets alanını kontrol edin.")
+            st.error("Secrets içinde 'GEMINI_API_KEY' bulunamadı!")
         else:
             api_key = st.secrets["GEMINI_API_KEY"].strip()
             
-            with st.spinner("Yapay zeka analizi hazırlanıyor..."):
+            with st.spinner("Yapay zeka detaylı mühendislik analizini hazırlıyor..."):
                 try:
                     genai.configure(api_key=api_key)
-                    # En güncel kararlı flash modeli
-                    model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
+                    
+                    # Doğru ve standart model ismi
+                    model = genai.GenerativeModel("gemini-1.5-flash")
                     
                     prompt = f"""
                     Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
@@ -50,4 +50,4 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                     st.markdown(response.text)
                     
                 except Exception as e:
-                    st.error(f"Yapay zeka çağrısında hata oluştu: {str(e)}")
+                    st.error(f"Hata: {str(e)}")
