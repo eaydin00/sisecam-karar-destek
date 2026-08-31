@@ -9,7 +9,23 @@ st.set_page_config(
 )
 
 st.title("🎯 Şişecam Yapay Zeka Destekli Analiz & Karar Destek Sistemi")
-st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntemleri puanlayan ve somut aksiyonları belirleyen karar destek sistemi.")
+st.markdown("Operasyonel ve teknik problemleri tanımlı analiz yöntemleri havuzuyla eşleştiren, puanlayan ve somut aksiyonları belirleyen karar destek sistemi.")
+
+# Kurumsal Bilgi Tabanı / Onaylı Metot Havuzu
+APPROVED_METHODS = """
+1. Zaman Etüdü & İş Örneklemesi
+2. Hat Dengeleme & Çevrim Zamanı Analizi
+3. FMEA / PFMEA (Hata Türleri ve Etkileri Analizi)
+4. 5 Neden (5 Why) & Kök Neden Analizi
+5. Pareto Analizi (80/20 Kuralı)
+6. Balık Kılçığı (Ishikawa) Diyagramı
+7. SMED (Hızlı Model/Kalıp Değişimi)
+8. SPC (İstatistiksel Proses Kontrol)
+9. Ergonomi & 5S Çalışma Alanı Düzenleme
+10. OEE (Toplam Ekipman Etkinliği) Analizi
+11. Değer Akış Haritalama (VSM - Value Stream Mapping)
+12. Poka-Yoke (Hata Önleyici Düzenekler)
+"""
 
 problem_input = st.text_area(
     "📝 Proje / Problem Tanımını Girin:",
@@ -17,7 +33,7 @@ problem_input = st.text_area(
     height=120
 )
 
-if st.button("🚀 Problemi Analiz Et ve Yöntemleri Puanla", type="primary"):
+if st.button("🚀 Problemi Analiz Et ve Yöntemleri Belirle", type="primary"):
     if not problem_input.strip():
         st.warning("Lütfen analiz edilecek bir problem tanımı girin.")
     else:
@@ -26,28 +42,34 @@ if st.button("🚀 Problemi Analiz Et ve Yöntemleri Puanla", type="primary"):
         else:
             api_key = st.secrets["GEMINI_API_KEY"].strip()
             
-            with st.spinner("Yapay zeka yöntemleri puanlıyor ve analizi hazırlıyor..."):
+            with st.spinner("Yapay zeka tanımlı metot havuzunu tarıyor..."):
                 client = genai.Client(api_key=api_key)
                 
                 prompt = f"""
-                Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir Karar Destek Danışmanısın.
-                Aşağıdaki fabrika problemini detaylıca analiz et:
-                
-                Problem: "{problem_input}"
-                
-                Lütfen yanıtını tam olarak şu 3 ana başlık altında ve net bir dille oluştur:
-                
-                1. 🔍 **Kök Neden & Durum Değerlendirmesi:**
-                   Problemin temel kaynaklarını (makine, süreç, insan, yerleşim vb.) net ve teknik bir dille özetle.
-                
-                2. 📊 **Analitik Yöntem Uygunluk ve Puanlama Tablosu:**
-                   Bu problem için uygulanabilecek tüm alternatif mühendislik yöntemlerini değerlendir ve Markdown tablosu olarak sun.
-                   Tablo kolonları:
-                   | Öncelik | Önerilen Analiz Yöntemi | Uygunluk Puanı (100 Üzerinden) | Neden Bu Yöntem? (Beklenen Katkı) |
-                   
-                3. 🛠️ **Yöntem Bazlı Somut Saha Aksiyonları:**
-                   (NOT: Günlük/haftalık fazlara, yapay takvimlere BÖLME. Doğrudan yöntem bazında sahada ne yapılacağını açıkla.)
-                   Tabloda yüksek puan alan (uygun bulunan) yöntemlerin her biri için sahada atılacak somut, teknik adımları alt başlıklar halinde madde madde yaz.
+                Sen kurumsal standartlara ve tanımlı metot havuzuna sıkı sıkıya bağlı bir Karar Destek Danışmanısın.
+
+                KATI KURALLAR:
+                1. YALNIZCA aşağıdaki "Onaylı Analiz Yöntemleri Havuzu"nda yer alan metotları kullan. Bu listede bulunmayan hiçbir yeni yöntem türetme veya önerme.
+                2. Problem metninde açıkça belirtilmeyen süreç değişkenleri, makineler veya durumlar hakkında varsayımda bulunma. Yalnızca verilen metindeki ifadelere dayan.
+                3. Öneri kurgusu: Öncelikle tam 1 adet "Ana Yöntem", ardından gerekliyse en fazla 2 adet "Destekleyici Yöntem" seç (Toplamda maksimum 3 yöntem).
+
+                ONAYLI ANALİZ YÖNTEMLERİ HAVUZU:
+                {APPROVED_METHODS}
+
+                GİRİLEN PROBLEM:
+                "{problem_input}"
+
+                Lütfen çıktıyı şu başlıklar altında yapılandır:
+
+                1. 🔍 **Problem Tespiti & Odak Noktası:**
+                   Yalnızca verilen metindeki ifadelere dayalı kısa durum değerlendirmesi.
+
+                2. 📊 **Yöntem Puanlama ve Karar Tablosu:**
+                   (Yalnızca seçilen 1 Ana ve en fazla 2 Destekleyici yöntemi içeren Markdown tablosu)
+                   | Rol | Önerilen Yöntem (Havuzdan) | Uygunluk Puanı (100 Üzerinden) | Seçim Gerekçesi |
+
+                3. 🛠️ **Seçilen Yöntemler İçin Saha Aksiyonları:**
+                   Seçilen bu 1 ana ve (varsa) destekleyici yöntemlerin her biri için sahada atılacak net ve doğrudan uygulama adımları.
                 """
                 
                 response_text = None
@@ -66,7 +88,7 @@ if st.button("🚀 Problemi Analiz Et ve Yöntemleri Puanla", type="primary"):
                         continue
                 
                 if response_text:
-                    st.success("Yapay Zeka Destekli Analiz ve Puanlama Tamamlandı")
+                    st.success("Analiz Tamamlandı")
                     st.markdown(response_text)
                 else:
                     st.error("Sunucu yoğunluğu nedeniyle yanıt alınamadı. Lütfen birkaç saniye sonra tekrar deneyin.")
