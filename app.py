@@ -26,11 +26,20 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
         else:
             api_key = st.secrets["GEMINI_API_KEY"].strip()
             
-            with st.spinner("Yapay zeka detaylı mühendislik analizini hazırlıyor..."):
+            with st.spinner("Yapay zeka analizi hazırlıyor..."):
                 try:
-                    # Yeni ve resmi Google GenAI istemcisi
                     client = genai.Client(api_key=api_key)
                     
+                    # Kullanılabilir ilk Flash modelini otomatik seç
+                    target_model = "gemini-2.5-flash"
+                    try:
+                        for m in client.models.list():
+                            if "flash" in m.name.lower() and "generateContent" in getattr(m, 'supported_actions', ['generateContent']):
+                                target_model = m.name
+                                break
+                    except Exception:
+                        target_model = "gemini-2.5-flash"
+
                     prompt = f"""
                     Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
                     Aşağıdaki fabrika problemini detaylıca analiz et:
@@ -44,7 +53,7 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                     """
                     
                     response = client.models.generate_content(
-                        model="gemini-2.5-flash",
+                        model=target_model,
                         contents=prompt
                     )
                     
@@ -52,4 +61,4 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                     st.markdown(response.text)
                     
                 except Exception as e:
-                    st.error(f"Hata: {str(e)}")
+                    st.error(f"Hata detayı: {str(e)}")
