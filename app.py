@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import google.generativeai as genai
+from google import genai
 
 st.set_page_config(
     page_title="Şişecam Analiz & Karar Destek Sistemi",
@@ -28,10 +28,8 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
             
             with st.spinner("Yapay zeka detaylı mühendislik analizini hazırlıyor..."):
                 try:
-                    genai.configure(api_key=api_key)
-                    
-                    # Doğru ve standart model ismi
-                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    # Yeni ve resmi Google GenAI istemcisi
+                    client = genai.Client(api_key=api_key)
                     
                     prompt = f"""
                     Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
@@ -45,7 +43,11 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                     3. 🛠️ **Adım Adım Saha Aksiyon Planı:** Mühendislerin sahada uygulayacağı kronolojik adımlar.
                     """
                     
-                    response = model.generate_content(prompt)
+                    response = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=prompt
+                    )
+                    
                     st.success("Yapay Zeka Destekli Analiz Tamamlandı")
                     st.markdown(response.text)
                     
