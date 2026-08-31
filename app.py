@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import json
+import google.generativeai as genai
 
 st.set_page_config(
     page_title="Şişecam Analiz & Karar Destek Sistemi",
@@ -11,7 +11,7 @@ st.set_page_config(
 st.title("🎯 Şişecam Yapay Zeka Destekli Analiz & Karar Destek Sistemi")
 st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntem ve aksiyon planını belirleyen hibrit karar destek sistemi.")
 
-# Kapsamlı Yöntem Kütüphanesi (Fallback & Doğrulama Havuzu)
+# Kural Tabanlı Yedek Havuz
 METHODS_DB = [
     {
         "name": "Zaman Etüdü & İş Örneklemesi",
@@ -54,71 +54,9 @@ METHODS_DB = [
         "keywords": ["ağır", "zorlanıyor", "ergonomi", "yorgunluk", "düzen", "alan", "taşıma", "fiziksel"],
         "purpose": "Operatörün fiziksel zorlanmasını azaltmak ve çalışma alanını standartlaştırmak.",
         "action": "Taşıma alanlarına ergonomik tutucu sistemler ekleyin ve 5S standartlarını devreye alın."
-    },
-    {
-        "name": "OEE (Toplam Ekipman Etkinliği) Analizi",
-        "category": "Performans Yönetimi",
-        "keywords": ["verim", "oee", "performans", "kayıp", "kullanılabilirlik", "hız kaybı"],
-        "purpose": "Kullanılabilirlik, Performans ve Kalite oranlarını birleştirerek tesis etkinliğini ölçmek.",
-        "action": "Vardiya bazlı OEE panosu oluşturup ana kayıp kategorilerine göre kaizen başlatın."
-    },
-    {
-        "name": "SPC (İstatistiksel Süreç Kontrolü)",
-        "category": "Kalite Güvence",
-        "keywords": ["sapma", "tolerans", "ölçüm", "istatistik", "kontrol kartı", "dalgalanma"],
-        "purpose": "Süreç değişkenliğini kontrol limitleri (UCL/LCL) içerisinde izleyip sapmaları önceden görmek.",
-        "action": "Kritik proses parametreleri için X-bar R kontrol kartları açıp trend sapmalarını izleyin."
-    },
-    {
-        "name": "Pareto (80/20) & ABC Analizi",
-        "category": "Önceliklendirme",
-        "keywords": ["öncelik", "en çok", "kaynak", "dağılım", "stok", "liste", "sınıflandırma"],
-        "purpose": "Kayıpların %80'ine neden olan %20'lik ana odak noktalarını belirlemek.",
-        "action": "Hata veya duruş verilerini sıklıklarına göre sıralayıp kümülatif etkiyi gösteren Pareto grafiği çizin."
     }
 ]
 
-def analyze_with_gemini(problem_text: str, api_key: str):
-    from google import genai
-    from google.genai import types
-    
-    client = genai.Client(api_key=api_key)
-    
-    prompt = f"""
-    Sen endüstri mühendisliği ve üretim operasyonları alanında uzman bir Karar Destek Danışmanısın.
-    Aşağıda fabrikadaki bir mühendisin girdiği problem tanımı yer almaktadır:
-    
-    Problem: "{problem_text}"
-    
-    Bu probleme özel olarak:
-    1. Problemin kök neden hipotezini ve odak alanlarını özetle.
-    2. En uygun 3 analitik mühendislik yöntemini belirle (Örn: Zaman Etüdü, FMEA, Hat Dengeleme, SMED, SPC, 5S vb.).
-    3. Bu yöntemlerin sahada nasıl uygulanacağına dair somut, adımsal bir aksiyon planı çıkar.
-    
-    Lütfen yanıtını profesyonel, maddeli ve temiz bir Türkçe ile oluştur.
-    """
-    
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
-    return response.text
-
-def analyze_rule_based(problem_text: str):
-    text_lower = problem_text.lower()
-    scored = []
-    for m in METHODS_DB:
-        score = sum(1 for kw in m["keywords"] if kw in text_lower)
-        if score > 0:
-            scored.append((score, m))
-    
-    scored.sort(key=lambda x: x[0], reverse=True)
-    results = [m for _, m in scored[:4]]
-    if not results:
-        results = METHODS_DB[:3]
-    return results
-
-# Arayüz
 problem_input = st.text_area(
     "📝 Proje / Problem Tanımını Girin:",
     placeholder="Örn: Paketleme istasyonunda çevrim süresi çok yavaş, operatörler akışa yetişemiyor ve çatlak hataları artıyor.",
@@ -129,25 +67,45 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
     if not problem_input.strip():
         st.warning("Lütfen analiz edilecek bir problem tanımı girin.")
     else:
-        api_key = st.secrets.get("GEMINI_API_KEY", None)
-        success_gemini = False
+        api_key = st.secrets.get("GEMINI_API_KEY", "")
+        success_ai = False
         
-        with st.spinner("Problem kriterleri analiz ediliyor..."):
-            if api_key and api_key.startswith("AIza"):
+        with st.spinner("Problem kriterleri yapay zeka ile analiz ediliyor..."):
+            if api_key:
                 try:
-                    ai_result = analyze_with_gemini(problem_input, api_key)
-                    st.success("Yapay Zeka Destekli Analiz Tamamlandı")
-                    st.markdown("### 📋 Mühendislik Değerlendirmesi & Aksiyon Planı")
-                    st.markdown(ai_result)
-                    success_gemini = True
-                except Exception:
-                    success_gemini = False
+                    genai.configure(api_key=api_key)
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    prompt = f"""
+                    Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
+                    Aşağıdaki fabrika problemini detaylıca analiz et:
+                    
+                    Problem: "{problem_input}"
+                    
+                    Lütfen şu başlıklar altında kapsamlı ve profesyonel bir rapor üret:
+                    1. 🔍 **Kök Neden & Problem Özeti:** Problemin olası mekanik, insani veya süreçsel kök nedenleri.
+                    2. 🎯 **Önerilen Mühendislik Metotları:** Bu probleme özel en kritik 3 analiz yöntemi (Neden seçildiğini ve ne sağlayacağını açıkla).
+                    3. 🛠️ **Adım Adım Saha Aksiyon Planı:** Mühendislerin sahada uygulayacağı kronolojik adımlar.
+                    """
+                    response = model.generate_content(prompt)
+                    if response and response.text:
+                        st.success("Yapay Zeka Destekli Analiz Tamamlandı")
+                        st.markdown(response.text)
+                        success_ai = True
+                except Exception as e:
+                    # Hata olursa sessizce yedek algoritmaya geç
+                    success_ai = False
 
-            if not success_gemini:
-                results = analyze_rule_based(problem_input)
-                st.success("Kural Tabanlı Analitik Eşleştirme Tamamlandı")
+            if not success_ai:
+                st.info("Kural Tabanlı Analitik Eşleştirme Tamamlandı")
+                text_lower = problem_input.lower()
+                scored = []
+                for m in METHODS_DB:
+                    score = sum(1 for kw in m["keywords"] if kw in text_lower)
+                    if score > 0:
+                        scored.append((score, m))
+                scored.sort(key=lambda x: x[0], reverse=True)
+                results = [m for _, m in scored[:3]] if scored else METHODS_DB[:3]
                 
-                st.subheader("🎯 Eşleşen Yöntemler & Karar Destek Tablosu")
                 table_data = []
                 for i, res in enumerate(results, 1):
                     table_data.append({
@@ -157,7 +115,5 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                         "Kullanım Amacı": res["purpose"]
                     })
                 st.table(pd.DataFrame(table_data))
-                
-                st.subheader("🛠️ Önerilen Saha Aksiyon Planı")
                 for res in results:
                     st.markdown(f"**• {res['name']}:** {res['action']}")
