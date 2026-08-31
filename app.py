@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title("🎯 Şişecam Yapay Zeka Destekli Analiz & Karar Destek Sistemi")
-st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntem ve aksiyon planını belirleyen karar destek sistemi.")
+st.markdown("Operasyonel, teknik ve analitik problemleri analiz ederek en uygun yöntemleri puanlayan ve aksiyon planını belirleyen karar destek sistemi.")
 
 problem_input = st.text_area(
     "📝 Proje / Problem Tanımını Girin:",
@@ -17,7 +17,7 @@ problem_input = st.text_area(
     height=120
 )
 
-if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="primary"):
+if st.button("🚀 Problemi Analiz Et ve Yöntemleri Puanla", type="primary"):
     if not problem_input.strip():
         st.warning("Lütfen analiz edilecek bir problem tanımı girin.")
     else:
@@ -26,19 +26,25 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
         else:
             api_key = st.secrets["GEMINI_API_KEY"].strip()
             
-            with st.spinner("Yapay zeka analizi hazırlıyor..."):
+            with st.spinner("Yapay zeka yöntemleri puanlıyor ve analizi hazırlıyor..."):
                 client = genai.Client(api_key=api_key)
                 
                 prompt = f"""
-                Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
+                Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir Karar Destek Danışmanısın.
                 Aşağıdaki fabrika problemini detaylıca analiz et:
                 
                 Problem: "{problem_input}"
                 
                 Lütfen şu başlıklar altında kapsamlı ve profesyonel bir rapor üret:
-                1. 🔍 **Kök Neden & Problem Özeti:** Problemin olası mekanik, insani veya süreçsel kök nedenleri.
-                2. 🎯 **Önerilen Mühendislik Metotları:** Bu probleme özel en kritik 3 analiz yöntemi (Neden seçildiğini ve ne sağlayacağını açıkla).
-                3. 🛠️ **Adım Adım Saha Aksiyon Planı:** Mühendislerin sahada uygulayacağı kronolojik adımlar.
+                
+                1. 🔍 **Kök Neden & Problem Özeti:** Problemin operasyonel/teknik özeti.
+                
+                2. 📊 **Analitik Yöntem Uygunluk & Puanlama Tablosu (Markdown Tablosu formatında ver):**
+                   Bu probleme uygulanabilecek en ilgili 4-5 endüstri mühendisliği yöntemini listele.
+                   Tablo kolonları tam olarak şunlar olsun:
+                   | Öncelik | Önerilen Analiz Yöntemi | Uygunluk Puanı (100 Üzerinden) | Seçim Gerekçesi & Katkısı |
+                   
+                3. 🛠️ **Adım Adım Saha Aksiyon Planı:** En yüksek puan alan ilk 2-3 yöntemin sahada nasıl devreye alınacağına dair kronolojik adımlar.
                 """
                 
                 response_text = None
@@ -57,7 +63,7 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
                         continue
                 
                 if response_text:
-                    st.success("Yapay Zeka Destekli Analiz Tamamlandı")
+                    st.success("Yapay Zeka Destekli Analiz ve Puanlama Tamamlandı")
                     st.markdown(response_text)
                 else:
-                    st.error("Google sunucularındaki geçici yoğunluk nedeniyle yanıt alınamadı. Lütfen birkaç saniye sonra tekrar deneyin.")
+                    st.error("Sunucu yoğunluğu nedeniyle yanıt alınamadı. Lütfen birkaç saniye sonra tekrar deneyin.")
