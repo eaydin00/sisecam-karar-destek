@@ -27,28 +27,37 @@ if st.button("🚀 Problemi Analiz Et ve En Uygun Yöntemleri Belirle", type="pr
             api_key = st.secrets["GEMINI_API_KEY"].strip()
             
             with st.spinner("Yapay zeka analizi hazırlıyor..."):
-                try:
-                    client = genai.Client(api_key=api_key)
-                    
-                    prompt = f"""
-                    Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
-                    Aşağıdaki fabrika problemini detaylıca analiz et:
-                    
-                    Problem: "{problem_input}"
-                    
-                    Lütfen şu başlıklar altında kapsamlı ve profesyonel bir rapor üret:
-                    1. 🔍 **Kök Neden & Problem Özeti:** Problemin olası mekanik, insani veya süreçsel kök nedenleri.
-                    2. 🎯 **Önerilen Mühendislik Metotları:** Bu probleme özel en kritik 3 analiz yöntemi (Neden seçildiğini ve ne sağlayacağını açıkla).
-                    3. 🛠️ **Adım Adım Saha Aksiyon Planı:** Mühendislerin sahada uygulayacağı kronolojik adımlar.
-                    """
-                    
-                    response = client.models.generate_content(
-                        model="gemini-3.6-flash",
-                        contents=prompt
-                    )
-                    
+                client = genai.Client(api_key=api_key)
+                
+                prompt = f"""
+                Sen endüstri mühendisliği, cam üretimi ve operasyonel mükemmellik alanında uzman kıdemli bir danışmansın.
+                Aşağıdaki fabrika problemini detaylıca analiz et:
+                
+                Problem: "{problem_input}"
+                
+                Lütfen şu başlıklar altında kapsamlı ve profesyonel bir rapor üret:
+                1. 🔍 **Kök Neden & Problem Özeti:** Problemin olası mekanik, insani veya süreçsel kök nedenleri.
+                2. 🎯 **Önerilen Mühendislik Metotları:** Bu probleme özel en kritik 3 analiz yöntemi (Neden seçildiğini ve ne sağlayacağını açıkla).
+                3. 🛠️ **Adım Adım Saha Aksiyon Planı:** Mühendislerin sahada uygulayacağı kronolojik adımlar.
+                """
+                
+                response_text = None
+                candidate_models = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-pro"]
+                
+                for model_name in candidate_models:
+                    try:
+                        resp = client.models.generate_content(
+                            model=model_name,
+                            contents=prompt
+                        )
+                        if resp and resp.text:
+                            response_text = resp.text
+                            break
+                    except Exception:
+                        continue
+                
+                if response_text:
                     st.success("Yapay Zeka Destekli Analiz Tamamlandı")
-                    st.markdown(response.text)
-                    
-                except Exception as e:
-                    st.error(f"Hata detayı: {str(e)}")
+                    st.markdown(response_text)
+                else:
+                    st.error("Google sunucularındaki geçici yoğunluk nedeniyle yanıt alınamadı. Lütfen birkaç saniye sonra tekrar deneyin.")
