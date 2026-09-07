@@ -1,29 +1,1062 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fizibilite ve Tasarruf Analizi</title><meta name="description" content="Yatırım, tasarruf ve ek giderlerden net kazanç, ROI ve geri ödeme süresi hesaplar.">
-<style>
-:root{font-family:Arial,sans-serif;color:#19283a;background:#f4f6f8;--navy:#173f6b;--blue:#2c6ca5;--line:#d8e0e8;--muted:#647487;--green:#16704b;--red:#b42318;--soft:#edf3f8}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}.shell{max-width:1320px;margin:auto;padding:22px 24px 55px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding-bottom:15px;border-bottom:3px solid var(--navy)}h1{font-size:1.55rem;color:var(--navy);margin:0}.top p{margin:5px 0 0;color:var(--muted)}.actions{display:flex;gap:8px}.btn{border:1px solid #b9c5d0;background:white;color:#263b51;border-radius:5px;padding:9px 13px;font-weight:700;cursor:pointer}.btn.main{background:var(--navy);color:white;border-color:var(--navy)}.project{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:14px;padding:16px;background:white;border:1px solid var(--line);margin:18px 0}label{display:grid;gap:6px;color:#33485d;font-weight:700}label span{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#596b7f}input,select{min-width:0;border:1px solid #bac5d0;border-radius:4px;padding:9px 10px;color:#17263a;background:white;outline:0}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2c6ca51f}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(340px,.65fr);gap:16px;align-items:start}.card{background:white;border:1px solid var(--line);margin-bottom:14px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 15px;background:var(--soft);border-bottom:1px solid var(--line)}.head h2{margin:0;font-size:1rem;color:#203b58}.head p{margin:3px 0 0;color:var(--muted);font-size:.82rem}.add{border:0;background:none;color:var(--blue);font-weight:800;cursor:pointer;white-space:nowrap}.scroll{overflow-x:auto}.table-head,.row{display:grid;gap:8px;align-items:center;min-width:700px}.table-head{padding:9px 13px 4px;color:#6a7a8d;font-weight:800;font-size:.7rem;text-transform:uppercase}.row{padding:6px 13px}.invest{grid-template-columns:150px minmax(170px,1fr) 125px 36px}.saving{grid-template-columns:135px minmax(135px,1fr) 90px 90px 75px 105px 110px 36px}.cost{grid-template-columns:150px minmax(180px,1fr) 125px 36px}.row input,.row select{padding:8px;font-size:.84rem}.value{font-weight:800;text-align:right;color:var(--green)}.del{border:0;background:none;color:#a13830;font-size:1.2rem;cursor:pointer}.empty{padding:20px;text-align:center;color:#7a8897;font-size:.86rem}.summary{position:sticky;top:14px;border-top:4px solid var(--navy)}.sum-title{padding:15px}.sum-title h2{margin:0;color:var(--navy);font-size:1.12rem}.sum-title p{margin:4px 0 0;color:var(--muted);font-size:.82rem}.kpis{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}.kpi{padding:15px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.kpi:nth-child(even){border-right:0}.kpi.primary{grid-column:1/-1;background:var(--navy)}.kpi small{display:block;color:#6c7c8e;margin-bottom:6px}.kpi strong{font-size:1.25rem;color:var(--navy)}.kpi.primary small{color:#dbe8f4}.kpi.primary strong{font-size:1.9rem;color:white}.breakdown{padding:5px 15px 15px}.breakdown h3{font-size:.86rem;color:#354a60}.line{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #e7ebef;font-size:.86rem}.verdict{margin:14px;padding:12px;border-left:4px solid var(--green);background:#eef8f3;color:#145e40;font-weight:700;font-size:.88rem}.verdict.bad{border-color:var(--red);background:#fff2f0;color:var(--red)}.negative{color:var(--red)!important}.saved{font-size:.8rem;color:var(--green);font-weight:700;padding:0 15px 15px;display:block}.formula{padding:11px 15px;color:#5c6d80;font-size:.8rem;border-top:1px solid var(--line)}
-.appbar{background:#0b3158;color:white;border-bottom:1px solid #31597d}.appbar-inner{max-width:1320px;margin:auto;padding:9px 24px;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;letter-spacing:.03em}.brand{font-weight:800}.app-type{color:#cbd9e7}.top{background:white;margin:0 -24px;padding:20px 24px;border-bottom:1px solid var(--line);align-items:center}.top-title{display:flex;gap:14px;align-items:center}.brandmark{width:42px;height:42px;border-radius:10px;background:linear-gradient(145deg,#0d5089,#1a73ad);display:grid;place-items:center;color:white;font-weight:800;font-size:1.25rem;box-shadow:0 7px 18px #173f6b28}.eyebrow{display:block;color:var(--blue);font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:18px 0}.step{background:white;padding:12px 14px;display:flex;align-items:center;gap:10px;color:#53667a;font-size:.82rem;font-weight:700}.step b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#e8f1f8;color:var(--blue);font-size:.75rem}.card,.project{border-radius:8px;box-shadow:0 2px 9px #22364d0b;overflow:hidden}.head{background:#f1f5f8}.btn{border-radius:7px}.btn.main{background:#0e5f97}.summary{border-top:0;box-shadow:0 8px 25px #173f6b17}.sum-title{border-top:4px solid #0e5f97}.kpi.primary{background:linear-gradient(135deg,#0d416f,#0d659d)}input,select{border-radius:6px}.add{padding:7px 10px;border:1px solid #b9cad9;border-radius:6px;background:white}.row{border-bottom:1px solid #edf0f3}.value{background:#edf8f3;border-radius:5px;padding:7px 8px}
-@media(max-width:930px){.layout{grid-template-columns:1fr}.summary{position:static}.project{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}}@media(max-width:620px){.shell{padding:14px 10px 40px}.appbar-inner{padding:9px 12px}.top{margin:0 -10px;padding:16px 10px;flex-direction:column;align-items:flex-start}.actions{width:100%}.actions .btn{flex:1}.project{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.kpi,.kpi:nth-child(even){border-right:0}}@media print{body{background:white}.appbar,.steps{display:none}.shell{max-width:none;padding:0}.actions,.add,.del{display:none}.layout{grid-template-columns:1fr 390px}.summary{position:static}.card{break-inside:avoid}}
-</style></head><body><div class="appbar"><div class="appbar-inner"><span class="brand">FİZİBİLİTE ANALİZİ</span><span class="app-type">İç Değerlendirme Aracı</span></div></div><main class="shell">
-<header class="top"><div class="top-title"><div class="brandmark">F</div><div><span class="eyebrow">Karar Destek Sistemi</span><h1>Fizibilite ve Tasarruf Analizi</h1><p>Yatırım, tasarruf ve ek giderleri tek sonuçta birleştirir.</p></div></div><div class="actions"><button class="btn" id="reset">Yeni çalışma</button><button class="btn" id="print">PDF oluştur</button><button class="btn main" id="save">Çalışmayı kaydet</button></div></header>
-<div class="steps"><div class="step"><b>1</b>Proje bilgileri</div><div class="step"><b>2</b>Yatırım tutarı</div><div class="step"><b>3</b>Tasarruf ve giderler</div><div class="step"><b>4</b>Finansal sonuç</div></div>
-<section class="project"><label><span>Proje adı</span><input id="projectName" value="Yeni fizibilite çalışması"></label><label><span>Sorumlu birim</span><input id="owner" placeholder="Örn. Lojistik / Üretim"></label><label><span>Başlangıç ayı</span><input id="startDate" type="month"></label></section>
-<div class="layout"><div>
-<section class="card"><div class="head"><div><h2>1. Başlangıç yatırımı</h2><p>Bir defa ödenecek tutarlar</p></div><button class="add" data-add="investment">+ Yatırım ekle</button></div><div class="scroll"><div class="table-head invest"><span>Kalem</span><span>Açıklama</span><span>Tutar (TL)</span><span></span></div><div id="investmentRows"></div></div></section>
-<section class="card"><div class="head"><div><h2>2. Tasarruf kalemleri</h2><p>(Mevcut miktar − yeni miktar) × birim maliyet</p></div><button class="add" data-add="saving">+ Tasarruf ekle</button></div><div class="scroll"><div class="table-head saving"><span>Kalem</span><span>Açıklama</span><span>Mevcut</span><span>Yeni</span><span>Birim</span><span>Birim maliyet</span><span>Aylık tasarruf</span><span></span></div><div id="savingRows"></div></div><div class="formula">Örnek: (100 mevcut palet − 80 yeni palet) × 761 TL = 15.220 TL aylık tasarruf.</div></section>
-<section class="card"><div class="head"><div><h2>3. Ek giderler</h2><p>Proje başladıktan sonra her ay oluşacak yeni maliyetler</p></div><button class="add" data-add="cost">+ Gider ekle</button></div><div class="scroll"><div class="table-head cost"><span>Kalem</span><span>Açıklama</span><span>Aylık tutar (TL)</span><span></span></div><div id="costRows"></div></div></section>
-</div><aside><section class="card summary"><div class="sum-title"><h2>Sonuç</h2><p id="projectLabel">Yeni fizibilite çalışması</p></div><div class="kpis"><div class="kpi primary"><small>Aylık net kazanç</small><strong id="monthlyNet">₺0</strong></div><div class="kpi"><small>Aylık tasarruf</small><strong id="monthlySaving">₺0</strong></div><div class="kpi"><small>Aylık ek gider</small><strong id="monthlyCost">₺0</strong></div><div class="kpi"><small>Yıllık net kazanç</small><strong id="annualNet">₺0</strong></div><div class="kpi"><small>Toplam yatırım</small><strong id="investmentTotal">₺0</strong></div><div class="kpi"><small>ROI</small><strong id="roi">—</strong></div><div class="kpi"><small>Geri ödeme</small><strong id="payback">—</strong></div></div><div class="verdict" id="verdict">Hesaplama için bir kalem ekleyin.</div><div class="breakdown"><h3>Hesabın oluşumu</h3><div class="line"><span>Toplam aylık tasarruf</span><b id="bSaving">₺0</b></div><div class="line"><span>Toplam aylık gider</span><b id="bCost">₺0</b></div><div class="line"><span>Aylık net kazanç</span><b id="bNet">₺0</b></div></div><span class="saved" id="savedState"></span></section></aside></div>
-</main><script>
-const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s)),money=new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}),numfmt=new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2});
-const savingTypes={"Palet":"palet","Shrink":"kg","Çip / görsel":"adet","Konveyör":"hareket","Forklift / LGV":"hareket","İşçilik":"saat","Enerji":"kWh","Nakliye":"sefer","Hurda / fire":"adet","Bakım":"işlem","Stok alanı":"m²","Diğer":"adet"},investmentTypes=["Makine / ekipman","Yazılım","Kurulum","Eğitim","Test ve devreye alma","Altyapı","Danışmanlık","Diğer"],costTypes=["Bakım","Enerji","Lisans / yazılım","İşçilik","Nakliye","Sarf malzeme","Kiralama","Diğer"];
-let state={investments:[],savings:[],costs:[]};
-function parse(v){let s=String(v??"").trim().replace(/\s/g,"");if(!s)return 0;if(s.includes(","))s=s.replace(/\./g,"").replace(",",".");else if((s.match(/\./g)||[]).length>1||/^\d{1,3}(\.\d{3})+$/.test(s))s=s.replace(/\./g,"");return Number(s)||0}function fmt(v){return String(v??"").trim()===""?"":numfmt.format(parse(v))}function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function opts(list,val){return list.map(x=>'<option '+(x===val?'selected':'')+'>'+esc(x)+'</option>').join("")}function saving(x){return Math.max(0,parse(x.current)-parse(x.next))*parse(x.unitCost)}
-function sync(){$$("[data-invest]").forEach(r=>{let x=state.investments[+r.dataset.invest];x.type=r.querySelector(".type").value;x.name=r.querySelector(".name").value;x.amount=r.querySelector(".amount").value});$$("[data-saving]").forEach(r=>{let x=state.savings[+r.dataset.saving];x.type=r.querySelector(".type").value;x.name=r.querySelector(".name").value;x.current=r.querySelector(".current").value;x.next=r.querySelector(".next").value;x.unit=r.querySelector(".unit").value;x.unitCost=r.querySelector(".unit-cost").value});$$("[data-cost]").forEach(r=>{let x=state.costs[+r.dataset.cost];x.type=r.querySelector(".type").value;x.name=r.querySelector(".name").value;x.amount=r.querySelector(".amount").value})}
-function render(){$("#investmentRows").innerHTML=state.investments.length?state.investments.map((x,i)=>'<div class="row invest" data-invest="'+i+'"><select class="type">'+opts(investmentTypes,x.type)+'</select><input class="name" value="'+esc(x.name)+'" placeholder="Açıklama"><input class="amount numeric" value="'+esc(fmt(x.amount))+'" inputmode="decimal"><button class="del" data-del="investment:'+i+'">×</button></div>').join(""):'<div class="empty">Yatırım yoksa bu bölümü boş bırakabilirsiniz.</div>';
-$("#savingRows").innerHTML=state.savings.length?state.savings.map((x,i)=>'<div class="row saving" data-saving="'+i+'"><select class="type">'+opts(Object.keys(savingTypes),x.type)+'</select><input class="name" value="'+esc(x.name)+'" placeholder="Açıklama"><input class="current numeric" value="'+esc(fmt(x.current))+'" inputmode="decimal"><input class="next numeric" value="'+esc(fmt(x.next))+'" inputmode="decimal"><input class="unit" value="'+esc(x.unit)+'"><input class="unit-cost numeric" value="'+esc(fmt(x.unitCost))+'" inputmode="decimal"><span class="value">'+money.format(saving(x))+'</span><button class="del" data-del="saving:'+i+'">×</button></div>').join(""):'<div class="empty">Palet, shrink, enerji veya başka bir tasarruf kalemi ekleyin.</div>';
-$("#costRows").innerHTML=state.costs.length?state.costs.map((x,i)=>'<div class="row cost" data-cost="'+i+'"><select class="type">'+opts(costTypes,x.type)+'</select><input class="name" value="'+esc(x.name)+'" placeholder="Açıklama"><input class="amount numeric" value="'+esc(fmt(x.amount))+'" inputmode="decimal"><button class="del" data-del="cost:'+i+'">×</button></div>').join(""):'<div class="empty">Proje yeni bir aylık gider oluşturmuyorsa boş bırakabilirsiniz.</div>'}
-function calculate(){sync();let inv=state.investments.reduce((a,x)=>a+parse(x.amount),0),sav=state.savings.reduce((a,x)=>a+saving(x),0),cost=state.costs.reduce((a,x)=>a+parse(x.amount),0),net=sav-cost,annual=net*12,roi=inv?annual/inv*100:null,pay=inv&&net>0?inv/net:null;$$("[data-saving]").forEach((r,i)=>r.querySelector(".value").textContent=money.format(saving(state.savings[i])));$("#projectLabel").textContent=$("#projectName").value||"Adsız çalışma";$("#monthlySaving").textContent=$("#bSaving").textContent=money.format(sav);$("#monthlyCost").textContent=$("#bCost").textContent=money.format(cost);$("#monthlyNet").textContent=$("#bNet").textContent=money.format(net);$("#annualNet").textContent=money.format(annual);$("#investmentTotal").textContent=money.format(inv);$("#roi").textContent=roi===null?"—":numfmt.format(roi)+"%";$("#payback").textContent=pay===null?"—":pay<1?"1 aydan kısa":numfmt.format(pay)+" ay";$("#monthlyNet").className=net<0?"negative":"";$("#annualNet").className=annual<0?"negative":"";let has=state.investments.length+state.savings.length+state.costs.length>0,v=$("#verdict");v.classList.toggle("bad",net<=0&&has);v.textContent=!has?"Hesaplama için bir kalem ekleyin.":net<=0?"Mevcut verilerle proje aylık net kazanç üretmiyor.":inv===0?"Aylık net kazanç pozitif; ROI için yatırım tutarı girilmelidir.":"Yatırım yaklaşık "+(pay<1?"1 aydan kısa sürede":numfmt.format(pay)+" ayda")+" geri ödeniyor."}
-function add(kind){sync();if(kind==="investment")state.investments.push({type:"Makine / ekipman",name:"",amount:""});if(kind==="saving")state.savings.push({type:"Palet",name:"",current:"",next:"",unit:"palet",unitCost:""});if(kind==="cost")state.costs.push({type:"Bakım",name:"",amount:""});render();calculate()}function reset(){state={investments:[],savings:[],costs:[]};$("#projectName").value="Yeni fizibilite çalışması";$("#owner").value="";let d=new Date();$("#startDate").value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");render();calculate()}
-document.addEventListener("click",e=>{let a=e.target.closest("[data-add]");if(a)return add(a.dataset.add);let d=e.target.closest("[data-del]");if(d){sync();let[k,i]=d.dataset.del.split(":");state[k==="investment"?"investments":k==="saving"?"savings":"costs"].splice(+i,1);render();calculate()}});document.addEventListener("input",e=>{if(e.target.matches("input,select")){calculate();$("#savedState").textContent=""}});document.addEventListener("change",e=>{if(e.target.matches("[data-saving] .type")){sync();let r=e.target.closest("[data-saving]"),x=state.savings[+r.dataset.saving];x.unit=savingTypes[x.type];render()}calculate()});document.addEventListener("focusout",e=>{if(e.target.matches(".numeric"))e.target.value=fmt(e.target.value)});
-$("#reset").onclick=reset;$("#print").onclick=()=>window.print();$("#save").onclick=()=>{sync();localStorage.setItem("feasibility-form-v6",JSON.stringify({state,name:$("#projectName").value,owner:$("#owner").value,date:$("#startDate").value}));$("#savedState").textContent="Bu tarayıcıya kaydedildi."};try{let s=JSON.parse(localStorage.getItem("feasibility-form-v6"));if(!s)reset();else{state=s.state;$("#projectName").value=s.name;$("#owner").value=s.owner;$("#startDate").value=s.date;render();calculate()}}catch(e){reset()}
-</script></body></html>
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fizibilite ve Tasarruf Analizi</title>
+    <meta
+      name="description"
+      content="Aylık tasarruf ve giderlerden yıllık net kazanç, ROI ve geri ödeme süresi hesaplar."
+    />
+    <style>
+      :root {
+        font-family: Arial, sans-serif;
+        color: #19283a;
+        background: #f4f6f8;
+        --navy: #173f6b;
+        --blue: #2c6ca5;
+        --line: #d8e0e8;
+        --muted: #647487;
+        --green: #16704b;
+        --red: #b42318;
+        --soft: #edf3f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      .shell {
+        max-width: 1320px;
+        margin: auto;
+        padding: 22px 24px 55px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+        padding-bottom: 15px;
+        border-bottom: 3px solid var(--navy);
+      }
+      h1 {
+        font-size: 1.55rem;
+        color: var(--navy);
+        margin: 0;
+      }
+      .top p {
+        margin: 5px 0 0;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn {
+        border: 1px solid #b9c5d0;
+        background: white;
+        color: #263b51;
+        border-radius: 5px;
+        padding: 9px 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .btn.main {
+        background: var(--navy);
+        color: white;
+        border-color: var(--navy);
+      }
+      .project {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr;
+        gap: 14px;
+        padding: 16px;
+        background: white;
+        border: 1px solid var(--line);
+        margin: 18px 0;
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        color: #33485d;
+        font-weight: 700;
+      }
+      label span {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #596b7f;
+      }
+      input,
+      select {
+        min-width: 0;
+        border: 1px solid #bac5d0;
+        border-radius: 4px;
+        padding: 9px 10px;
+        color: #17263a;
+        background: white;
+        outline: 0;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 2px #2c6ca51f;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.65fr);
+        gap: 16px;
+        align-items: start;
+      }
+      .card {
+        background: white;
+        border: 1px solid var(--line);
+        margin-bottom: 14px;
+      }
+      .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 15px;
+        background: var(--soft);
+        border-bottom: 1px solid var(--line);
+      }
+      .head h2 {
+        margin: 0;
+        font-size: 1rem;
+        color: #203b58;
+      }
+      .head p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .add {
+        border: 0;
+        background: none;
+        color: var(--blue);
+        font-weight: 800;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+      .table-head,
+      .row {
+        display: grid;
+        gap: 8px;
+        align-items: center;
+        min-width: 700px;
+      }
+      .table-head {
+        padding: 9px 13px 4px;
+        color: #6a7a8d;
+        font-weight: 800;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+      .row {
+        padding: 6px 13px;
+      }
+      .invest {
+        grid-template-columns: 150px minmax(170px, 1fr) 125px 36px;
+      }
+      .saving {
+        grid-template-columns: 92px 125px minmax(120px, 1fr) 82px 82px 66px 98px 108px 36px;
+        min-width: 900px;
+      }
+      .cost {
+        grid-template-columns: 92px 145px minmax(160px, 1fr) 125px 36px;
+      }
+      .row input,
+      .row select {
+        padding: 8px;
+        font-size: 0.84rem;
+      }
+      .value {
+        font-weight: 800;
+        text-align: right;
+        color: var(--green);
+      }
+      .del {
+        border: 0;
+        background: none;
+        color: #a13830;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+      .empty {
+        padding: 20px;
+        text-align: center;
+        color: #7a8897;
+        font-size: 0.86rem;
+      }
+      .summary {
+        position: sticky;
+        top: 14px;
+        border-top: 4px solid var(--navy);
+      }
+      .sum-title {
+        padding: 15px;
+      }
+      .sum-title h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: 1.12rem;
+      }
+      .sum-title p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid var(--line);
+      }
+      .kpi {
+        padding: 15px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .kpi:nth-child(even) {
+        border-right: 0;
+      }
+      .kpi.primary {
+        grid-column: 1/-1;
+        background: var(--navy);
+      }
+      .kpi small {
+        display: block;
+        color: #6c7c8e;
+        margin-bottom: 6px;
+      }
+      .kpi strong {
+        font-size: 1.25rem;
+        color: var(--navy);
+      }
+      .kpi.primary small {
+        color: #dbe8f4;
+      }
+      .kpi.primary strong {
+        font-size: 1.9rem;
+        color: white;
+      }
+      .breakdown {
+        padding: 5px 15px 15px;
+      }
+      .breakdown h3 {
+        font-size: 0.86rem;
+        color: #354a60;
+      }
+      .line {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid #e7ebef;
+        font-size: 0.86rem;
+      }
+      .verdict {
+        margin: 14px;
+        padding: 12px;
+        border-left: 4px solid var(--green);
+        background: #eef8f3;
+        color: #145e40;
+        font-weight: 700;
+        font-size: 0.88rem;
+      }
+      .verdict.bad {
+        border-color: var(--red);
+        background: #fff2f0;
+        color: var(--red);
+      }
+      .negative {
+        color: var(--red) !important;
+      }
+      .saved {
+        font-size: 0.8rem;
+        color: var(--green);
+        font-weight: 700;
+        padding: 0 15px 15px;
+        display: block;
+      }
+      .formula {
+        padding: 11px 15px;
+        color: #5c6d80;
+        font-size: 0.8rem;
+        border-top: 1px solid var(--line);
+      }
+      .appbar {
+        background: #0b3158;
+        color: white;
+        border-bottom: 1px solid #31597d;
+      }
+      .appbar-inner {
+        max-width: 1320px;
+        margin: auto;
+        padding: 9px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.78rem;
+        letter-spacing: 0.03em;
+      }
+      .brand {
+        font-weight: 800;
+      }
+      .app-type {
+        color: #cbd9e7;
+      }
+      .top {
+        background: white;
+        margin: 0 -24px;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        align-items: center;
+      }
+      .top-title {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .brandmark {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: linear-gradient(145deg, #0d5089, #1a73ad);
+        display: grid;
+        place-items: center;
+        color: white;
+        font-weight: 800;
+        font-size: 1.25rem;
+        box-shadow: 0 7px 18px #173f6b28;
+      }
+      .eyebrow {
+        display: block;
+        color: var(--blue);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin: 18px 0;
+      }
+      .step {
+        background: white;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #53667a;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+      .step b {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #e8f1f8;
+        color: var(--blue);
+        font-size: 0.75rem;
+      }
+      .card,
+      .project {
+        border-radius: 8px;
+        box-shadow: 0 2px 9px #22364d0b;
+        overflow: hidden;
+      }
+      .head {
+        background: #f1f5f8;
+      }
+      .btn {
+        border-radius: 7px;
+      }
+      .btn.main {
+        background: #0e5f97;
+      }
+      .summary {
+        border-top: 0;
+        box-shadow: 0 8px 25px #173f6b17;
+      }
+      .sum-title {
+        border-top: 4px solid #0e5f97;
+      }
+      .kpi.primary {
+        background: linear-gradient(135deg, #0d416f, #0d659d);
+      }
+      input,
+      select {
+        border-radius: 6px;
+      }
+      .add {
+        padding: 7px 10px;
+        border: 1px solid #b9cad9;
+        border-radius: 6px;
+        background: white;
+      }
+      .row {
+        border-bottom: 1px solid #edf0f3;
+      }
+      .value {
+        background: #edf8f3;
+        border-radius: 5px;
+        padding: 7px 8px;
+      }
+      @media (max-width: 930px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .summary {
+          position: static;
+        }
+        .project {
+          grid-template-columns: 1fr 1fr;
+        }
+        .steps {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        .shell {
+          padding: 14px 10px 40px;
+        }
+        .appbar-inner {
+          padding: 9px 12px;
+        }
+        .top {
+          margin: 0 -10px;
+          padding: 16px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .actions {
+          width: 100%;
+        }
+        .actions .btn {
+          flex: 1;
+        }
+        .project {
+          grid-template-columns: 1fr;
+        }
+        .steps {
+          grid-template-columns: 1fr;
+        }
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+        .kpi,
+        .kpi:nth-child(even) {
+          border-right: 0;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .appbar,
+        .steps {
+          display: none;
+        }
+        .shell {
+          max-width: none;
+          padding: 0;
+        }
+        .actions,
+        .add,
+        .del {
+          display: none;
+        }
+        .layout {
+          grid-template-columns: 1fr 390px;
+        }
+        .summary {
+          position: static;
+        }
+        .card {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="appbar">
+      <div class="appbar-inner">
+        <span class="brand">FİZİBİLİTE ANALİZİ</span
+        ><span class="app-type">İç Değerlendirme Aracı</span>
+      </div>
+    </div>
+    <main class="shell">
+      <header class="top">
+        <div class="top-title">
+          <div class="brandmark">F</div>
+          <div>
+            <span class="eyebrow">Karar Destek Sistemi</span>
+            <h1>Fizibilite ve Tasarruf Analizi</h1>
+            <p>Aylara göre yatırım, tasarruf ve giderleri tek sonuçta birleştirir.</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="reset">Yeni çalışma</button
+          ><button class="btn" id="print">PDF oluştur</button
+          ><button class="btn main" id="save">Çalışmayı kaydet</button>
+        </div>
+      </header>
+      <div class="steps">
+        <div class="step"><b>1</b>Proje bilgileri</div>
+        <div class="step"><b>2</b>Yatırım tutarı</div>
+        <div class="step"><b>3</b>Tasarruf ve giderler</div>
+        <div class="step"><b>4</b>Finansal sonuç</div>
+      </div>
+      <section class="project">
+        <label
+          ><span>Proje adı</span
+          ><input id="projectName" value="Yeni fizibilite çalışması" /></label
+        ><label
+          ><span>Sorumlu birim</span
+          ><input id="owner" placeholder="Örn. Lojistik / Üretim" /></label
+        ><label
+          ><span>Başlangıç ayı</span><input id="startDate" type="month"
+        /></label>
+      </section>
+      <div class="layout">
+        <div>
+          <section class="card">
+            <div class="head">
+              <div>
+                <h2>1. Başlangıç yatırımı</h2>
+                <p>Bir defa ödenecek tutarlar</p>
+              </div>
+              <button class="add" data-add="investment">+ Yatırım ekle</button>
+            </div>
+            <div class="scroll">
+              <div class="table-head invest">
+                <span>Kalem</span><span>Açıklama</span><span>Tutar (TL)</span
+                ><span></span>
+              </div>
+              <div id="investmentRows"></div>
+            </div>
+          </section>
+          <section class="card">
+            <div class="head">
+              <div>
+                <h2>2. Tasarruf kalemleri</h2>
+                <p>Ay bazında veya yıllık olarak girilebilir</p>
+              </div>
+              <button class="add" data-add="saving">+ Tasarruf ekle</button>
+            </div>
+            <div class="scroll">
+              <div class="table-head saving">
+                <span>Dönem</span><span>Kalem</span><span>Açıklama</span><span>Mevcut</span
+                ><span>Yeni</span><span>Birim</span><span>Birim maliyet</span
+                ><span>Dönem tasarrufu</span><span></span>
+              </div>
+              <div id="savingRows"></div>
+            </div>
+            <div class="formula">
+              Örnek: (100 mevcut palet − 80 yeni palet) × 761 TL = 15.220 TL
+              tasarruf. “Her ay” seçilirse tutar 12 kez; “Yıllık toplam” seçilirse bir kez hesaba katılır.
+            </div>
+          </section>
+          <section class="card">
+            <div class="head">
+              <div>
+                <h2>3. Giderler</h2>
+                <p>Aylık veya yıllık maliyetler</p>
+              </div>
+              <button class="add" data-add="cost">+ Gider ekle</button>
+            </div>
+            <div class="scroll">
+              <div class="table-head cost">
+                <span>Dönem</span><span>Kalem</span><span>Açıklama</span
+                ><span>Dönem tutarı (TL)</span><span></span>
+              </div>
+              <div id="costRows"></div>
+            </div>
+          </section>
+        </div>
+        <aside>
+          <section class="card summary">
+            <div class="sum-title">
+              <h2>Sonuç</h2>
+              <p id="projectLabel">Yeni fizibilite çalışması</p>
+            </div>
+            <div class="kpis">
+              <div class="kpi primary">
+                <small>Yıllık net kazanç</small
+                ><strong id="annualNet">₺0</strong>
+              </div>
+              <div class="kpi">
+                <small>Yıllık tasarruf</small
+                ><strong id="annualSaving">₺0</strong>
+              </div>
+              <div class="kpi">
+                <small>Yıllık gider</small
+                ><strong id="annualCost">₺0</strong>
+              </div>
+              <div class="kpi">
+                <small>İlk yıl net sonucu</small
+                ><strong id="firstYearNet">₺0</strong>
+              </div>
+              <div class="kpi">
+                <small>Toplam yatırım</small
+                ><strong id="investmentTotal">₺0</strong>
+              </div>
+              <div class="kpi">
+                <small>İlk yıl ROI</small><strong id="roi">—</strong>
+              </div>
+              <div class="kpi">
+                <small>Geri ödeme</small><strong id="payback">—</strong>
+              </div>
+            </div>
+            <div class="verdict" id="verdict">
+              Hesaplama için bir kalem ekleyin.
+            </div>
+            <div class="breakdown">
+              <h3>Hesabın oluşumu</h3>
+              <div class="line">
+                <span>Toplam yıllık tasarruf</span><b id="bSaving">₺0</b>
+              </div>
+              <div class="line">
+                <span>Toplam yıllık gider</span><b id="bCost">₺0</b>
+              </div>
+              <div class="line">
+                <span>Yıllık faaliyet kazancı</span><b id="bNet">₺0</b>
+              </div>
+              <div class="line">
+                <span>İlk yıl yatırım sonrası</span><b id="bFirstYear">₺0</b>
+              </div>
+            </div>
+            <span class="saved" id="savedState"></span>
+          </section>
+        </aside>
+      </div>
+    </main>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        $$ = (s) => Array.from(document.querySelectorAll(s)),
+        money = new Intl.NumberFormat("tr-TR", {
+          style: "currency",
+          currency: "TRY",
+          maximumFractionDigits: 0,
+        }),
+        numfmt = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 2 });
+      const months = [
+        "Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
+        "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"
+      ];
+      const periods = [...months, "Her ay", "Yıllık toplam"];
+      const savingTypes = {
+          Palet: "palet",
+          Shrink: "kg",
+          "Çip / görsel": "adet",
+          Konveyör: "hareket",
+          "Forklift / LGV": "hareket",
+          İşçilik: "saat",
+          Enerji: "kWh",
+          Nakliye: "sefer",
+          "Hurda / fire": "adet",
+          Bakım: "işlem",
+          "Stok alanı": "m²",
+          Diğer: "adet",
+        },
+        investmentTypes = [
+          "Makine / ekipman",
+          "Yazılım",
+          "Kurulum",
+          "Eğitim",
+          "Test ve devreye alma",
+          "Altyapı",
+          "Danışmanlık",
+          "Diğer",
+        ],
+        costTypes = [
+          "Bakım",
+          "Enerji",
+          "Lisans / yazılım",
+          "İşçilik",
+          "Nakliye",
+          "Sarf malzeme",
+          "Kiralama",
+          "Diğer",
+        ];
+      let state = { investments: [], savings: [], costs: [] };
+      function parse(v) {
+        let s = String(v ?? "")
+          .trim()
+          .replace(/\s/g, "");
+        if (!s) return 0;
+        if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+        else if (
+          (s.match(/\./g) || []).length > 1 ||
+          /^\d{1,3}(\.\d{3})+$/.test(s)
+        )
+          s = s.replace(/\./g, "");
+        return Number(s) || 0;
+      }
+      function fmt(v) {
+        return String(v ?? "").trim() === "" ? "" : numfmt.format(parse(v));
+      }
+      function esc(v) {
+        return String(v ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function opts(list, val) {
+        return list
+          .map(
+            (x) =>
+              "<option " +
+              (x === val ? "selected" : "") +
+              ">" +
+              esc(x) +
+              "</option>",
+          )
+          .join("");
+      }
+      function saving(x) {
+        return (
+          Math.max(0, parse(x.current) - parse(x.next)) * parse(x.unitCost)
+        );
+      }
+      function sync() {
+        $$("[data-invest]").forEach((r) => {
+          let x = state.investments[+r.dataset.invest];
+          x.type = r.querySelector(".type").value;
+          x.name = r.querySelector(".name").value;
+          x.amount = r.querySelector(".amount").value;
+        });
+        $$("[data-saving]").forEach((r) => {
+          let x = state.savings[+r.dataset.saving];
+          x.month = r.querySelector(".month").value;
+          x.type = r.querySelector(".type").value;
+          x.name = r.querySelector(".name").value;
+          x.current = r.querySelector(".current").value;
+          x.next = r.querySelector(".next").value;
+          x.unit = r.querySelector(".unit").value;
+          x.unitCost = r.querySelector(".unit-cost").value;
+        });
+        $$("[data-cost]").forEach((r) => {
+          let x = state.costs[+r.dataset.cost];
+          x.month = r.querySelector(".month").value;
+          x.type = r.querySelector(".type").value;
+          x.name = r.querySelector(".name").value;
+          x.amount = r.querySelector(".amount").value;
+        });
+      }
+      function render() {
+        $("#investmentRows").innerHTML = state.investments.length
+          ? state.investments
+              .map(
+                (x, i) =>
+                  '<div class="row invest" data-invest="' +
+                  i +
+                  '"><select class="type">' +
+                  opts(investmentTypes, x.type) +
+                  '</select><input class="name" value="' +
+                  esc(x.name) +
+                  '" placeholder="Açıklama"><input class="amount numeric" value="' +
+                  esc(fmt(x.amount)) +
+                  '" inputmode="decimal"><button class="del" data-del="investment:' +
+                  i +
+                  '">×</button></div>',
+              )
+              .join("")
+          : '<div class="empty">Yatırım yoksa bu bölümü boş bırakabilirsiniz.</div>';
+        $("#savingRows").innerHTML = state.savings.length
+          ? state.savings
+              .map(
+                (x, i) =>
+                  '<div class="row saving" data-saving="' +
+                  i +
+                  '"><select class="month">' +
+                  opts(periods, x.month || "Ocak") +
+                  '</select><select class="type">' +
+                  opts(Object.keys(savingTypes), x.type) +
+                  '</select><input class="name" value="' +
+                  esc(x.name) +
+                  '" placeholder="Açıklama"><input class="current numeric" value="' +
+                  esc(fmt(x.current)) +
+                  '" inputmode="decimal"><input class="next numeric" value="' +
+                  esc(fmt(x.next)) +
+                  '" inputmode="decimal"><input class="unit" value="' +
+                  esc(x.unit) +
+                  '"><input class="unit-cost numeric" value="' +
+                  esc(fmt(x.unitCost)) +
+                  '" inputmode="decimal"><span class="value">' +
+                  money.format(saving(x)) +
+                  '</span><button class="del" data-del="saving:' +
+                  i +
+                  '">×</button></div>',
+              )
+              .join("")
+          : '<div class="empty">Palet, shrink, enerji veya başka bir tasarruf kalemi ekleyin.</div>';
+        $("#costRows").innerHTML = state.costs.length
+          ? state.costs
+              .map(
+                (x, i) =>
+                  '<div class="row cost" data-cost="' +
+                  i +
+                  '"><select class="month">' +
+                  opts(periods, x.month || "Ocak") +
+                  '</select><select class="type">' +
+                  opts(costTypes, x.type) +
+                  '</select><input class="name" value="' +
+                  esc(x.name) +
+                  '" placeholder="Açıklama"><input class="amount numeric" value="' +
+                  esc(fmt(x.amount)) +
+                  '" inputmode="decimal"><button class="del" data-del="cost:' +
+                  i +
+                  '">×</button></div>',
+              )
+              .join("")
+          : '<div class="empty">Proje yeni bir aylık gider oluşturmuyorsa boş bırakabilirsiniz.</div>';
+      }
+      function calculate() {
+        sync();
+        let inv = state.investments.reduce((a, x) => a + parse(x.amount), 0),
+          annualSaving = state.savings.reduce(
+            (a, x) => a + saving(x) * (x.month === "Her ay" ? 12 : 1),
+            0,
+          ),
+          annualCost = state.costs.reduce(
+            (a, x) => a + parse(x.amount) * (x.month === "Her ay" ? 12 : 1),
+            0,
+          ),
+          annualNet = annualSaving - annualCost,
+          firstYearNet = annualNet - inv,
+          roi = inv ? (firstYearNet / inv) * 100 : null;
+        const annualItemsMonthlyShare =
+          (state.savings
+            .filter((x) => x.month === "Yıllık toplam")
+            .reduce((a, x) => a + saving(x), 0) -
+            state.costs
+              .filter((x) => x.month === "Yıllık toplam")
+              .reduce((a, x) => a + parse(x.amount), 0)) /
+          12;
+        const recurringMonthlySaving = state.savings
+          .filter((x) => x.month === "Her ay")
+          .reduce((a, x) => a + saving(x), 0);
+        const recurringMonthlyCost = state.costs
+          .filter((x) => x.month === "Her ay")
+          .reduce((a, x) => a + parse(x.amount), 0);
+        const monthlyFlows = months.map((month) => {
+          const monthSaving = state.savings
+            .filter((x) => (x.month || "Ocak") === month)
+            .reduce((a, x) => a + saving(x), 0);
+          const monthCost = state.costs
+            .filter((x) => (x.month || "Ocak") === month)
+            .reduce((a, x) => a + parse(x.amount), 0);
+          return (
+            monthSaving -
+            monthCost +
+            recurringMonthlySaving -
+            recurringMonthlyCost +
+            annualItemsMonthlyShare
+          );
+        });
+        let cumulative = -inv, pay = null;
+        if (inv > 0) {
+          for (let i = 0; i < monthlyFlows.length; i++) {
+            const before = cumulative;
+            cumulative += monthlyFlows[i];
+            if (cumulative >= 0 && monthlyFlows[i] > 0) {
+              pay = i + Math.max(0, -before) / monthlyFlows[i];
+              break;
+            }
+          }
+          if (pay === null && annualNet > 0) pay = inv / (annualNet / 12);
+        }
+        $$("[data-saving]").forEach(
+          (r, i) =>
+            (r.querySelector(".value").textContent = money.format(
+              saving(state.savings[i]),
+            )),
+        );
+        $("#projectLabel").textContent =
+          $("#projectName").value || "Adsız çalışma";
+        $("#annualSaving").textContent = $("#bSaving").textContent =
+          money.format(annualSaving);
+        $("#annualCost").textContent = $("#bCost").textContent =
+          money.format(annualCost);
+        $("#annualNet").textContent = $("#bNet").textContent =
+          money.format(annualNet);
+        $("#firstYearNet").textContent = $("#bFirstYear").textContent =
+          money.format(firstYearNet);
+        $("#investmentTotal").textContent = money.format(inv);
+        $("#roi").textContent = roi === null ? "—" : numfmt.format(roi) + "%";
+        $("#payback").textContent =
+          pay === null
+            ? "—"
+            : pay < 1
+              ? "1 aydan kısa"
+              : numfmt.format(pay) + " ay";
+        $("#annualNet").className = annualNet < 0 ? "negative" : "";
+        $("#firstYearNet").className = firstYearNet < 0 ? "negative" : "";
+        let has =
+            state.investments.length +
+              state.savings.length +
+              state.costs.length >
+            0,
+          v = $("#verdict");
+        v.classList.toggle("bad", annualNet <= 0 && has);
+        v.textContent = !has
+          ? "Hesaplama için bir kalem ekleyin."
+          : annualNet <= 0
+            ? "Mevcut verilerle proje yıllık net kazanç üretmiyor."
+            : inv === 0
+              ? "Yıllık net kazanç pozitif; ROI için yatırım tutarı girilmelidir."
+              : "Yatırım yaklaşık " +
+                (pay < 1
+                  ? "1 aydan kısa sürede"
+                  : numfmt.format(pay) + " ayda") +
+                " geri ödeniyor.";
+      }
+      function add(kind) {
+        sync();
+        const usedMonths =
+          kind === "saving"
+            ? state.savings.map((x) => x.month)
+            : state.costs.map((x) => x.month);
+        const defaultMonth = months.find((m) => !usedMonths.includes(m)) || "Ocak";
+        if (kind === "investment")
+          state.investments.push({
+            type: "Makine / ekipman",
+            name: "",
+            amount: "",
+          });
+        if (kind === "saving")
+          state.savings.push({
+            month: defaultMonth,
+            type: "Palet",
+            name: "",
+            current: "",
+            next: "",
+            unit: "palet",
+            unitCost: "",
+          });
+        if (kind === "cost")
+          state.costs.push({
+            month: defaultMonth,
+            type: "Bakım",
+            name: "",
+            amount: "",
+          });
+        render();
+        calculate();
+      }
+      function reset() {
+        state = { investments: [], savings: [], costs: [] };
+        $("#projectName").value = "Yeni fizibilite çalışması";
+        $("#owner").value = "";
+        let d = new Date();
+        $("#startDate").value =
+          d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+        render();
+        calculate();
+      }
+      document.addEventListener("click", (e) => {
+        let a = e.target.closest("[data-add]");
+        if (a) return add(a.dataset.add);
+        let d = e.target.closest("[data-del]");
+        if (d) {
+          sync();
+          let [k, i] = d.dataset.del.split(":");
+          state[
+            k === "investment"
+              ? "investments"
+              : k === "saving"
+                ? "savings"
+                : "costs"
+          ].splice(+i, 1);
+          render();
+          calculate();
+        }
+      });
+      document.addEventListener("input", (e) => {
+        if (e.target.matches("input,select")) {
+          calculate();
+          $("#savedState").textContent = "";
+        }
+      });
+      document.addEventListener("change", (e) => {
+        if (e.target.matches("[data-saving] .type")) {
+          sync();
+          let r = e.target.closest("[data-saving]"),
+            x = state.savings[+r.dataset.saving];
+          x.unit = savingTypes[x.type];
+          render();
+        }
+        calculate();
+      });
+      document.addEventListener("focusout", (e) => {
+        if (e.target.matches(".numeric")) e.target.value = fmt(e.target.value);
+      });
+      $("#reset").onclick = reset;
+      $("#print").onclick = () => window.print();
+      $("#save").onclick = () => {
+        sync();
+        localStorage.setItem(
+          "feasibility-form-v7",
+          JSON.stringify({
+            state,
+            name: $("#projectName").value,
+            owner: $("#owner").value,
+            date: $("#startDate").value,
+          }),
+        );
+        $("#savedState").textContent = "Bu tarayıcıya kaydedildi.";
+      };
+      try {
+        let s = JSON.parse(
+          localStorage.getItem("feasibility-form-v7") ||
+            localStorage.getItem("feasibility-form-v6"),
+        );
+        if (!s) reset();
+        else {
+          state = s.state;
+          state.savings = (state.savings || []).map((x) => ({
+            ...x,
+            month: x.month === "Yıllık" ? "Yıllık toplam" : x.month || "Ocak",
+          }));
+          state.costs = (state.costs || []).map((x) => ({
+            ...x,
+            month: x.month === "Yıllık" ? "Yıllık toplam" : x.month || "Ocak",
+          }));
+          $("#projectName").value = s.name;
+          $("#owner").value = s.owner;
+          $("#startDate").value = s.date;
+          render();
+          calculate();
+        }
+      } catch (e) {
+        reset();
+      }
+    </script>
+  </body>
+</html>
